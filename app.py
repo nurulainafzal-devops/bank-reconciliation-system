@@ -1,19 +1,28 @@
-import csv
 
-income = 0
-expenses = 0
 
-with open("transactions.csv") as file:
-    reader = csv.DictReader(file)
+from flask import Flask, render_template, request
+import pandas as pd
 
-    for row in reader:
-        amount = float(row["Amount"])
+app = Flask(__name__)
 
-        if amount > 0:
-            income += amount
-        else:
-            expenses += abs(amount)
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-print("Income:", income)
-print("Expenses:", expenses)
-print("Net:", income - expenses)
+@app.route("/upload", methods=["POST"])
+def upload():
+
+    file = request.files["file"]
+
+    if not file:
+        return "No file uploaded"
+
+    df = pd.read_csv(file)
+
+    return render_template(
+        "report.html",
+        tables=[df.to_html(classes="table", index=False)]
+    )
+
+if __name__ == "__main__":
+    app.run(debug=True)
