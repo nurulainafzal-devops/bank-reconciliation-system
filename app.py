@@ -26,3 +26,21 @@ def upload():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+
+
+from utils.reconciliation_engine import reconcile
+
+bank = [
+    {"Date": "2025-01-01", "Description": "Salary", "Amount": 5000},
+    {"Date": "2025-01-02", "Description": "ATM withdrawal", "Amount": -200}
+]
+
+internal = [
+    {"Date": "2025-01-01", "Description": "Monthly Salary", "Amount": 5000},
+]
+
+result = reconcile(bank, internal)
+
+print(result)
